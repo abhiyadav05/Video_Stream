@@ -1,6 +1,9 @@
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken'
+
+
 export const userRegister = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -25,10 +28,23 @@ export const userRegister = async (req, res) => {
       password: hashPassword,
       email,
     });
+    
+
+    // generate the token 
+
+    jwt.sign(
+      {id : user._id},
+      process.env.JWT_SECRET_KEY
+    )
 
     res.status(200).json({
       success: true,
-      message: "User Creater",
+      message: "User Createt",
+      user : {
+        id : user._id,
+        fullName : user.fullName,
+        email : user.email
+      }
     });
   } catch (error) {
     res.status(500).json({
@@ -61,6 +77,12 @@ export const userLogin = async (req, res) => {
         message: "Invalid credentials",
       });
     }
+
+    const token=jwt.sign({id : user._id},
+      process.env.JWT_SECRET_KEY
+    );
+    
+    res.cookie("token",token);
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -73,3 +95,11 @@ export const userLogin = async (req, res) => {
     });
   }
 };
+
+export const userLogout= async (req,res)=>{
+  req.clearCookie("token");
+  res.status(201).json({
+    success : true,
+    message : "User logout successfully"
+  })
+}
