@@ -39,7 +39,7 @@ export const userRegister = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "User Createt",
+      message: "User Created",
       user : {
         id : user._id,
         fullName : user.fullName,

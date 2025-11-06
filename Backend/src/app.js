@@ -11,12 +11,12 @@ app.use(cookieParser());
 
 
 import userRouter from "./routes/user.route.js";
-
+import foodPartnerRouter from "./routes/foodPartner.route.js";
 
 
 
 app.use('/api/users',userRouter)
-
+app.use('/api/foodpartner',foodPartnerRouter)
 
 
 
